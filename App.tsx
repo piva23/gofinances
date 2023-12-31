@@ -43,4 +43,5 @@ export default function App() {
 }
 
 import styled from 'styled-components/native';
+import HighlightCard from './src/components/HighlightCard';
 
