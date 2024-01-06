@@ -2,6 +2,8 @@ import React from 'react';
 import { Text } from 'react-native';
 import AppLoading from 'expo-app-loading';
 import { ThemeProvider } from 'styled-components';
+import styled from 'styled-components/native';
+
 
 import theme from './src/global/styles/theme';
 import Dashboard from './src/screens/Dashboard';
@@ -42,6 +44,4 @@ export default function App() {
   );
 }
 
-import styled from 'styled-components/native';
-import HighlightCard from './src/components/HighlightCard';
 

@@ -1,22 +1,47 @@
 import React from "react";
 import { Container, Header, Title, Icon, Footer, Amount, LastTransaction } from "./styles";
 
-export default function HighlightCard () {
-    return (
-        <Container>
+//Objeto que define as Propriedades
+interface Propriedades {
+    type: "up" | "down" | "total";
+    title: string;
+    amount: string;
+    lastTransaction: string;
+}
+
+const icon = {
+    up: "arrow-up-circle",
+    down: "arrow-down-circle",
+    total: "dollar-sign",
+};
+
+
+
+export function HighlightCard ( { 
+    type,
+    title,
+    amount,
+    lastTransaction,
+    } : Propriedades ) {
+
+        return (
+        <Container type={type}>
+
             <Header>
-                <Title>Entradas</Title>
-                <Icon name='arrow-up-circle' />
+                <Title type={type}>{title} </Title>
+                <Icon name={icon[type]} type={type} />
 
             </Header>
-            <Footer>
-                <Amount>R$ 17.000,00</Amount>
-                <LastTransaction>Última entrada dia 17 de março</LastTransaction>
-            </Footer>
 
+            <Footer>
+                <Amount type={type}>{amount}</Amount>
+                <LastTransaction type={type}>{lastTransaction}</LastTransaction>
+            </Footer>
 
         </Container>
 
     )
+
+    
 
 }
