@@ -15,22 +15,23 @@ import { Container, Header, Photo,
 //COMPONENTES
 import { HighlightCard } from '../../components/HighlightCard';
 import { TransactionCard } from '../../components/TransactionCard';
+import { TransactionTypeButton } from '../../components/Form/TransactionTypeButton';
+import { Button } from '../../components/Form/Button';
 
-
-interface HighlightProps {
+export interface DataListProps {
+    id: string;
+    type: 'up' | 'down';
+    title: string;
     amount: string;
-    lastTransaction: string;
-  }
-  
-interface HighlightData {
-    entradas: HighlightProps;
-    saidas: HighlightProps;
-    total: HighlightProps;
-  }
+    category: {name: string; icon: string;};
+    date: string;
+}
+
+
 
 export default function Dashboard () {
     
-    const data = [
+    const data :  DataListProps [] = [
         {
         id: '1',
         type: 'up',
@@ -111,7 +112,7 @@ export default function Dashboard () {
                 <HighlightCard
                     type='up'
                     title='Entradas' 
-                    amount='R$ 17.000,00' 
+                    amount='R$ 21.000,00' 
                     lastTransaction='08/08/2024'
                 />
                 <HighlightCard
@@ -143,11 +144,12 @@ export default function Dashboard () {
 
                 <TransactionFlatList
                     data={data}
+                    keyExtractor={item => item.id}
                     renderItem={({ item }) => <TransactionCard data={item}/>}
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{paddingBottom: 0}}
+                    
                 />
             </Transactions>
+            
         </Container>
         
     )

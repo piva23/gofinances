@@ -1,6 +1,10 @@
 import styled from 'styled-components/native';
 import { Feather } from '@expo/vector-icons';
 
+import { FlatList } from 'react-native';
+
+import { DataListProps } from '.'
+
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 
 export const Container = styled.View`
@@ -87,11 +91,12 @@ export const TransactionsTitle = styled.Text`
 export const TransactionList = styled.View`
 `;
 
-export const TransactionFlatList = styled.FlatList.attrs({
-    
+export const TransactionFlatList = styled(FlatList as new () => FlatList<DataListProps>).attrs({
+    showsVerticalScrollIndicator:false,
+    contentContainerStyle:{paddingBottom: 28}
 
     
-    })`
+    } )`
     padding-bottom: 20px;
     padding: 20px 0px;
 

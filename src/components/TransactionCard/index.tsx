@@ -11,24 +11,24 @@ import {
 
 } from "./styles";
 
-interface Category {
-    name: string;
-    icon: string;
-}
-
-interface Props {
+interface TransactionCardProps {
     data : {
     type: 'up' | 'down';
     title: string;
     amount: string;
-    category: Category;
+    category: CategoryProps;
     date: string;
     }
 }
 
+interface CategoryProps {
+    name: string;
+    icon: string;
+}
+
 export function TransactionCard ({
     data
-} : Props) {
+} : TransactionCardProps) {
     return (
         <Container>
             <Title>{data.title}</Title>
