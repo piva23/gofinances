@@ -42,11 +42,7 @@ export default function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <CategorySelect category='Teste' setCategory={function (category: Category): void {
-        throw new Error('Function not implemented.');
-      } } closeSelectCategory={function (): void {
-        throw new Error('Function not implemented.');
-      } }/>
+      <Register/>
     </ThemeProvider>
   );
 }

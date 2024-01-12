@@ -2,6 +2,11 @@ import styled from "styled-components/native";
 import { Feather } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
 import { TouchableOpacity } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+
+interface CategoryProps {
+  isActive: boolean;
+}
 
 export const Container = styled.View`
   flex: 1;
@@ -28,7 +33,7 @@ export const Title = styled.Text`
   color: ${({ theme }) => theme.colors.shape};
 `;
 
-export const Category = styled(TouchableOpacity)<{ isActive: boolean }>`
+export const Category = styled(TouchableOpacity)<CategoryProps>`
   width: 100%;
   padding: ${RFValue(15)}px;
 

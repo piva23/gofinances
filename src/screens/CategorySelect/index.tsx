@@ -24,9 +24,11 @@ export function CategorySelect({
   setCategory,
   closeSelectCategory,
 }: Props) {
+
   function handleCategorySelect(category: Category) {
     setCategory(category);
   }
+  
   return (
     <Container>
       <Header>

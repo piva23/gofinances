@@ -4,7 +4,7 @@ import { Control, Controller } from "react-hook-form";
 
 import { Input } from "../Input";
 
-import * as S from "./styles";
+import { Container , Error } from "./styles";
 
 interface Props extends TextInputProps {
   control: Control;
@@ -12,17 +12,25 @@ interface Props extends TextInputProps {
   error: string;
 }
 
-export function InputForm({ control, name, error, ...rest }: Props) {
+export function InputForm({ 
+  control, 
+  name, 
+  error,
+  ...rest } : Props) {
   return (
-    <S.Container>
+    <Container>
       <Controller
         control={control}
         render={({ field: { onChange, value } }) => (
-          <Input onChangeText={onChange} value={value} {...rest} />
-        )}
+                  <Input 
+                  onChangeText={onChange} 
+                  value={value} 
+                  {...rest} 
+                  />
+                )}
         name={name}
       />
-      {error && <S.Error>{error}</S.Error>}
-    </S.Container>
+      { error && <Error>{ error }</Error>}
+    </Container>
   );
 }
