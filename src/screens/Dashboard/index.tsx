@@ -5,7 +5,8 @@ import React from 'react';
 //ESTILOS
 import { Container, Header, Photo, 
         UserGreeting, UserName, UserWrapper, 
-        UserInfo, User, Icon, 
+        UserInfo, User, 
+        LogoutButton, Icon, 
         HighlightCards,
         Transactions,
         TransactionsTitle,
@@ -17,6 +18,7 @@ import { HighlightCard } from '../../components/HighlightCard';
 import { TransactionCard } from '../../components/TransactionCard';
 import { TransactionTypeButton } from '../../components/Form/TransactionTypeButton';
 import { Button } from '../../components/Form/Button';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export interface DataListProps {
     id: string;
@@ -93,20 +95,24 @@ export default function Dashboard () {
     
     return (
 
-
+        
         <Container>
-            <Header>
-                <UserWrapper>
-                    <UserInfo>
-                        <Photo source={{ uri:'https://avatars.githubusercontent.com/u/125154632?v=4'}}/>
-                        <User>
-                            <UserGreeting>Olá</UserGreeting>
-                            <UserName>Felipe Piva</UserName>
-                        </User>
-                    </UserInfo>
-                    <Icon name='power' />
-                </UserWrapper>
-            </Header>
+            <GestureHandlerRootView>
+                <Header>
+                    <UserWrapper>
+                        <UserInfo>
+                            <Photo source={{ uri:'https://avatars.githubusercontent.com/u/125154632?v=4'}}/>
+                            <User>
+                                <UserGreeting>Olá</UserGreeting>
+                                <UserName>Felipe Piva</UserName>
+                            </User>
+                        </UserInfo>
+                        <LogoutButton onPress= {() => {}}>
+                            <Icon name='power' />
+                        </LogoutButton>
+                    </UserWrapper>
+                </Header>
+            </GestureHandlerRootView>
             
             <HighlightCards>
                 <HighlightCard

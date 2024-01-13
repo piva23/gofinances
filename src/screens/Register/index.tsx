@@ -13,6 +13,7 @@ import { Button } from "../../components/Form/Button";
 import { TransactionTypeButton } from "../../components/Form/TransactionTypeButton";
 import { CategorySelectButton } from "../../components/Form/CategorySelectButton";
 import { CategorySelect } from "../CategorySelect";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 interface FormData {
   name: string,
@@ -63,26 +64,12 @@ export default function Register() {
 
   function handleCloseSelectCategoryModal () {
     setCategoryModalOpen(false);
+    //Keyboard.dismiss;
   }
 
-/*   function handleRegister (form: FormData) {
-    if (!transactionType) {
-      return Alert.alert("Selecione o tipo da transação");
-    }
-    if (category.key === "category") {
-      return Alert.alert("Selecione a categoria");
-    }
+  async function handleRegister(form: FormData) {
 
-    const data = {
-      name: form.name,
-      amount: form.amount,
-      transactionType,
-      category: category.key, 
-    }
-    console.log(data);
-  } */
-
-  const handleRegister: SubmitHandler<FormData> = async (formData) => {
+  //const handleRegister: SubmitHandler<FormData> = async (formData) => {
     if (!transactionType) {
       Alert.alert("Selecione o tipo da transação");
       return;
@@ -93,8 +80,8 @@ export default function Register() {
     }
   
     const data = {
-      name: formData.name,
-      amount: formData.amount,
+      name: form.name,
+      amount: form.amount,
       transactionType,
       category: category.key,
     };
@@ -104,6 +91,8 @@ export default function Register() {
   }
   
   return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <Container>
       <Header>
@@ -165,7 +154,6 @@ export default function Register() {
           </TransactionTypes>
           
           <CategorySelectButton title={category.name} onPress={handleOpenSelectCategoryModal} />
-
             
         </Fields>
 
@@ -193,6 +181,8 @@ export default function Register() {
     </Container>
 
     </TouchableWithoutFeedback>
+    </GestureHandlerRootView>
+
   );
 }
 
