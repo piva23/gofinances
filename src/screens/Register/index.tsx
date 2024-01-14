@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup';
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import uuid from 'react-native-uuid';
 
 import { Alert, Keyboard, Modal, TouchableWithoutFeedback} from "react-native";
-import { Container, Header, Title, Form, Fields, TransactionTypes } from './styles';
+import { DevTools, Container, Header, Title, Form, Fields, TransactionTypes } from './styles';
 
-import { Input } from "../../components/Form/Input";
 import { InputForm } from "../../components/Form/InputForm";
 import { Button } from "../../components/Form/Button";
 import { TransactionTypeButton } from "../../components/Form/TransactionTypeButton";
@@ -29,7 +31,8 @@ const schema = Yup.object().shape({
 });
 
 export default function Register() {
-
+  const dataKey = `@gofinances:transactions`;
+  
   //YUP RESOLVER
   const {
     control,
@@ -51,6 +54,9 @@ export default function Register() {
   const [transactionType, setTransactionType] = useState('');
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
 
+  //NAVEGAÇÃO
+  const navigation = useNavigation();
+
   //FUNCTIONS
   function handleTransactionTypeSelect(type: 'up' | 'down') {
     setTransactionType(type);
@@ -67,8 +73,8 @@ export default function Register() {
     //Keyboard.dismiss;
   }
 
-  async function handleRegister(form: FormData) {
 
+  async function handleRegister(form: FormData) {
   //const handleRegister: SubmitHandler<FormData> = async (formData) => {
     if (!transactionType) {
       Alert.alert("Selecione o tipo da transação");
@@ -79,17 +85,64 @@ export default function Register() {
       return;
     }
   
-    const data = {
+    const newTransaction = {
+      id: String(uuid.v4()),
       name: form.name,
       amount: form.amount,
       transactionType,
       category: category.key,
+      date: new Date(),
     };
   
-    console.log(data);
+    //console.log(data);
     // Aqui você pode prosseguir com o que deseja fazer com os dados.
+    
+    try {
+      //const dataKey = `@gofinances:transactions_@user:${user.name}`;
+        
+
+      const data = await AsyncStorage.getItem(dataKey);
+      const currentData = data ? JSON.parse(data) : [];
+
+      const dataFormated = [
+        ...currentData, 
+        newTransaction];
+
+      await AsyncStorage.setItem(dataKey, JSON.stringify(dataFormated));
+
+      //LIMPA O FORMULARIO
+      reset();
+      //LIMPA OS BOTOES
+      setTransactionType("");
+      setCategory({
+        key: "category",
+        name: "Categoria",
+      });
+
+      navigation.navigate('Listagem');
+      
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Não foi possível salvar");
+    }
+  }
+
+  async function LoadAllData() {
+    const data = await AsyncStorage.getItem(dataKey);
+    console.log(JSON.parse(data));
+  }
+
+  async function DeleteALlData() {
+    await AsyncStorage.removeItem(dataKey);
   }
   
+
+
+  useEffect(() => {
+
+
+  },[]);
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
 
@@ -164,9 +217,34 @@ export default function Register() {
         <TouchableOpacity onPress={() => handleTransactionTypeSelect('down')}>
         <Text>I'm touchable opacity!</Text>
         </TouchableOpacity> */}
+        
+       {/*  DEV TOOLS */}
+        <DevTools>
+          <TransactionTypeButton
+            type=''
+            title='Delete All Data'
+            isActive={transactionType === ''}
+            onPress={() => {
+              console.log("DeletedAllData");
+              DeleteALlData();
+            }}
+          />
+          <TransactionTypeButton
+            type=''
+            title='Load All Data'
+            isActive={transactionType === ''}
+            onPress={() => {
+              console.log("Loaded All Data");
+              LoadAllData();
+            }}
+      />
+          </DevTools>
+
 
         <Button title="Enviar" onPress={handleSubmit(handleRegister)} />
       </Form>
+
+      
       
       <Modal visible={categoryModalOpen}>
             <CategorySelect 

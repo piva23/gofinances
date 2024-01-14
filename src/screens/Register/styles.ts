@@ -47,3 +47,12 @@ export const TransactionTypes = styled.View`
   margin-top: 8px;
   margin-bottom: 16px;
 `;
+
+export const DevTools = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 8px;
+  margin-bottom: 16px;
+`;
+

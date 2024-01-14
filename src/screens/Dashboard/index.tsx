@@ -1,5 +1,5 @@
 //BIBBLIOTECAS
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
  
 
 //ESTILOS
@@ -19,11 +19,14 @@ import { TransactionCard } from '../../components/TransactionCard';
 import { TransactionTypeButton } from '../../components/Form/TransactionTypeButton';
 import { Button } from '../../components/Form/Button';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
+import { useTheme } from 'styled-components';
 
 export interface DataListProps {
     id: string;
     type: 'up' | 'down';
-    title: string;
+    name: string;
     amount: string;
     category: {name: string; icon: string;};
     date: string;
@@ -32,8 +35,8 @@ export interface DataListProps {
 
 
 export default function Dashboard () {
-    
-    const data :  DataListProps [] = [
+    //DADOS ESTATICOS
+    /* const data :  DataListProps [] = [
         {
         id: '1',
         type: 'up',
@@ -86,12 +89,147 @@ export default function Dashboard () {
     
     
     
-    ];
+    ]; */
 
-
-    
-    
-    
+    const [isLoading, setIsLoading] = useState(true);
+    const [transactions, setTransactions] = useState<DataListProps[]>([]);
+/*     const [highlightData, setHighlightData] = useState<HighlightData>(
+      {} as HighlightData
+    ); */
+  
+/*     const theme = useTheme();
+    const { user, signOut } = useAuth();
+    const { getItem } = useStorageData(); */
+  
+/*     function getLastTransactionDate(
+      collection: DataListProps[],
+      type: "positive" | "negative"
+    ) {
+      const collectionFilttered = collection.filter(
+        (transaction) => transaction.type === type
+      );
+  
+      if (collectionFilttered.length === 0) {
+        return 0;
+      }
+  
+      const lastTransaction = new Date(
+        Math.max.apply(
+          Math,
+          collectionFilttered.map((transaction) =>
+            new Date(transaction.date).getTime()
+          )
+        )
+      );
+  
+      return `${lastTransaction.getDate()} de ${lastTransaction.toLocaleString(
+        "pt-BR",
+        { month: "long" }
+      )}`;
+    } */
+  
+    async function loadingTransactions() {
+      const dataKey = `@gofinances:transactions`;
+  
+      const response = await AsyncStorage.getItem(dataKey);
+      const transactions = response ? JSON.parse(response) : [];
+  
+      let entriesTotal = 0;
+      let expensivesTotal = 0;
+  
+      const transactionsFormated: DataListProps[] = transactions
+      .map((item: DataListProps) => {
+          const amount = Number(item.amount).toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL",
+          });
+  
+          const date = Intl.DateTimeFormat("pt-BR", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          }).format(new Date(item.date));
+  
+          /* if (transaction.type === "positive") {
+            entriesTotal += Number(transaction.amount);
+          } else if (transaction.type === "negative") {
+            expensivesTotal += Number(transaction.amount);
+          } */
+  
+          return {
+            id: item.id,
+            name: item.name,
+            amount,
+            type: item.type,
+            category: item.category,
+            date,
+          };
+        }
+      );
+  
+      setTransactions(transactionsFormated);
+  
+      /* const lastTransactionEntries = getLastTransactionDate(
+        transactions,
+        "positive"
+      );
+      const lastTransactionExpensives = getLastTransactionDate(
+        transactions,
+        "negative"
+      );
+      const totalInterval = `01 à ${
+        lastTransactionExpensives > lastTransactionEntries
+          ? lastTransactionExpensives
+          : lastTransactionEntries
+      }`;
+  
+      const total = entriesTotal - expensivesTotal;
+  
+      setHighlightData({
+        entries: {
+          amount: entriesTotal.toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL",
+          }),
+          lastTransaction:
+            lastTransactionEntries === 0
+              ? "Não há transações"
+              : `Última entrada dia ${lastTransactionEntries}`,
+        },
+        expensives: {
+          amount: expensivesTotal.toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL",
+          }),
+          lastTransaction:
+            lastTransactionExpensives === 0
+              ? "Não há transações"
+              : `Última saída dia ${lastTransactionExpensives}`,
+        },
+        total: {
+          amount: total.toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL",
+          }),
+          lastTransaction:
+            lastTransactionEntries === 0 && lastTransactionExpensives === 0
+              ? "Não há transações"
+              : totalInterval,
+        },
+      }); */
+  
+      setIsLoading(false);
+    }
+  
+    useEffect(() => {
+      loadingTransactions();
+    }, []);
+  
+    useFocusEffect(
+      useCallback(() => {
+        loadingTransactions();
+      }, [])
+    );
     
     return (
 
@@ -149,7 +287,7 @@ export default function Dashboard () {
                 */}
 
                 <TransactionFlatList
-                    data={data}
+                    data={transactions}
                     keyExtractor={item => item.id}
                     renderItem={({ item }) => <TransactionCard data={item}/>}
                     
