@@ -60,8 +60,6 @@ export default function Register() {
   //FUNCTIONS
   function handleTransactionTypeSelect(type: 'up' | 'down') {
     setTransactionType(type);
-    console.log({type});
-    console.log(type);
   }
 
   function handleOpenSelectCategoryModal () {
@@ -89,7 +87,7 @@ export default function Register() {
       id: String(uuid.v4()),
       name: form.name,
       amount: form.amount,
-      transactionType,
+      type: transactionType,
       category: category.key,
       date: new Date(),
     };
@@ -191,7 +189,6 @@ export default function Register() {
             title='Entrada'
             isActive={transactionType === 'up'}
             onPress={() => {
-              console.log("Button pressed with type 'up'");
               handleTransactionTypeSelect('up');
             }}
           />
@@ -200,7 +197,6 @@ export default function Register() {
             title='Saída'
             isActive={transactionType === 'down'}
             onPress={() => {
-              console.log("Button pressed with type 'down'");
               handleTransactionTypeSelect('down');
             }}
       />
@@ -219,7 +215,7 @@ export default function Register() {
         </TouchableOpacity> */}
         
        {/*  DEV TOOLS */}
-        <DevTools>
+{/*         <DevTools>
           <TransactionTypeButton
             type=''
             title='Delete All Data'
@@ -238,7 +234,7 @@ export default function Register() {
               LoadAllData();
             }}
       />
-          </DevTools>
+          </DevTools> */}
 
 
         <Button title="Enviar" onPress={handleSubmit(handleRegister)} />

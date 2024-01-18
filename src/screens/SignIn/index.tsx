@@ -9,12 +9,12 @@ import AppleSvg from "../../assets/apple.svg";
 import GoogleSvg from "../../assets/google.svg";
 import LogoSvg from "../../assets/logo.svg";
 
-import { SignInSocialButton } from "../../components/SignInSocialButton";
+//import { SignInSocialButton } from "../../components/SignInSocialButton";
 
 import * as S from "./styles";
 
 export function SignIn() {
-  const [isLoading, setIsLoading] = useState(false);
+  /* const [isLoading, setIsLoading] = useState(false);
 
   const theme = useTheme();
   const { signInWithGoogle, signInWithApple } = useAuth();
@@ -40,7 +40,7 @@ export function SignIn() {
 
       Alert.alert("Não foi possível conectar a conta Apple");
     }
-  }
+  } */
 
   return (
     <S.Container>
@@ -62,7 +62,7 @@ export function SignIn() {
       </S.Header>
 
       <S.Footer>
-        <S.FooterWrapper>
+        {/* <S.FooterWrapper>
           <SignInSocialButton
             svg={GoogleSvg}
             title="Entrar com Google"
@@ -75,15 +75,15 @@ export function SignIn() {
               onPress={handleSignInWithApple}
             />
           )}
-        </S.FooterWrapper>
+        </S.FooterWrapper> */}
 
-        {isLoading && (
+        {/* {isLoading && (
           <ActivityIndicator
             color={theme.colors.shape}
             size="large"
             style={{ marginTop: 18 }}
           />
-        )}
+        )} */}
       </S.Footer>
     </S.Container>
   );

@@ -104,5 +104,13 @@ export const TransactionFlatList = styled(FlatList as new () => FlatList<DataLis
     } )`
     padding-bottom: 20px;
     padding: 20px 0px;
+    
 
     `;
+
+export const LoadContainer = styled.View`
+flex: 1;
+justify-content: center;
+align-items: center;
+
+`;

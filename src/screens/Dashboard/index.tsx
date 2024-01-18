@@ -11,17 +11,18 @@ import { Container, Header, Photo,
         Transactions,
         TransactionsTitle,
         TransactionList,
-        TransactionFlatList } from './styles';
+        TransactionFlatList,
+        LoadContainer } from './styles';
 
 //COMPONENTES
 import { HighlightCard } from '../../components/HighlightCard';
 import { TransactionCard } from '../../components/TransactionCard';
-import { TransactionTypeButton } from '../../components/Form/TransactionTypeButton';
 import { Button } from '../../components/Form/Button';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import { useTheme } from 'styled-components';
+import { ActivityIndicator } from 'react-native';
 
 export interface DataListProps {
     id: string;
@@ -32,7 +33,16 @@ export interface DataListProps {
     date: string;
 }
 
+interface HighlightProps {
+  amount: string;
+  lastTransaction: string;
+}
 
+interface HighlightData {
+  entries: HighlightProps;
+  expensives: HighlightProps;
+  total: HighlightProps;
+}
 
 export default function Dashboard () {
     //DADOS ESTATICOS
@@ -93,15 +103,15 @@ export default function Dashboard () {
 
     const [isLoading, setIsLoading] = useState(true);
     const [transactions, setTransactions] = useState<DataListProps[]>([]);
-/*     const [highlightData, setHighlightData] = useState<HighlightData>(
+     
+    const [highlightData, setHighlightData] = useState<HighlightData>(
       {} as HighlightData
-    ); */
-  
-/*     const theme = useTheme();
-    const { user, signOut } = useAuth();
+    ); 
+    const theme = useTheme();
+    /*const { user, signOut } = useAuth();
     const { getItem } = useStorageData(); */
   
-/*     function getLastTransactionDate(
+/*  function getLastTransactionDate(
       collection: DataListProps[],
       type: "positive" | "negative"
     ) {
@@ -150,11 +160,11 @@ export default function Dashboard () {
             year: "numeric",
           }).format(new Date(item.date));
   
-          /* if (transaction.type === "positive") {
-            entriesTotal += Number(transaction.amount);
-          } else if (transaction.type === "negative") {
-            expensivesTotal += Number(transaction.amount);
-          } */
+          if (item.type === "up") {
+            entriesTotal += Number(item.amount);
+          } else if (item.type === "down") {
+            expensivesTotal += Number(item.amount);
+          } 
   
           return {
             id: item.id,
@@ -169,20 +179,45 @@ export default function Dashboard () {
   
       setTransactions(transactionsFormated);
   
-      /* const lastTransactionEntries = getLastTransactionDate(
+/*       const lastTransactionEntries = getLastTransactionDate(
         transactions,
         "positive"
       );
       const lastTransactionExpensives = getLastTransactionDate(
         transactions,
         "negative"
-      );
+      );*/
+
+      
+      //DATA DAS ÚLTIMAS TRANSAÇÕES
+      const lastTransactionEntries = Math.max.apply( Math, transactions
+      .filter((transaction: DataListProps) => transaction.type === 'up')
+      .map((transaction: DataListProps) => new Date(transaction.date).getTime()))
+      ;
+      const lastTransactionEntriesFormatted = Intl
+      .DateTimeFormat("pt-BR", {
+        day: "2-digit",
+        month: "long",
+      }).format(new Date(lastTransactionEntries));
+
+      const lastTransactionExpensives = Math.max.apply( Math, transactions
+        .filter((transaction: DataListProps) => transaction.type === 'down')
+        .map((transaction: DataListProps) => new Date(transaction.date).getTime()))
+        ;
+      const lastTransactionExpensivesFormatted = Intl
+        .DateTimeFormat("pt-BR", {
+          day: "2-digit",
+          month: "long",
+        }).format(new Date(lastTransactionExpensives));
+
       const totalInterval = `01 à ${
         lastTransactionExpensives > lastTransactionEntries
-          ? lastTransactionExpensives
-          : lastTransactionEntries
-      }`;
-  
+            ? lastTransactionExpensivesFormatted
+            : lastTransactionEntriesFormatted
+        }`; 
+
+
+      //
       const total = entriesTotal - expensivesTotal;
   
       setHighlightData({
@@ -194,7 +229,7 @@ export default function Dashboard () {
           lastTransaction:
             lastTransactionEntries === 0
               ? "Não há transações"
-              : `Última entrada dia ${lastTransactionEntries}`,
+              : `Última entrada dia ${lastTransactionEntriesFormatted}`,
         },
         expensives: {
           amount: expensivesTotal.toLocaleString("pt-BR", {
@@ -204,7 +239,7 @@ export default function Dashboard () {
           lastTransaction:
             lastTransactionExpensives === 0
               ? "Não há transações"
-              : `Última saída dia ${lastTransactionExpensives}`,
+              : `Última saída dia ${lastTransactionExpensivesFormatted}`,
         },
         total: {
           amount: total.toLocaleString("pt-BR", {
@@ -216,7 +251,7 @@ export default function Dashboard () {
               ? "Não há transações"
               : totalInterval,
         },
-      }); */
+      }); 
   
       setIsLoading(false);
     }
@@ -233,8 +268,10 @@ export default function Dashboard () {
     
     return (
 
-        
         <Container>
+          {
+          isLoading ? <LoadContainer><ActivityIndicator color={theme.colors.primary}/></LoadContainer> :
+            <>
             <GestureHandlerRootView>
                 <Header>
                     <UserWrapper>
@@ -256,20 +293,20 @@ export default function Dashboard () {
                 <HighlightCard
                     type='up'
                     title='Entradas' 
-                    amount='R$ 21.000,00' 
-                    lastTransaction='08/08/2024'
+                    amount={highlightData.entries.amount}
+                    lastTransaction={highlightData.entries.lastTransaction}
                 />
                 <HighlightCard
                     type='down'
                     title='Saídas' 
-                    amount='R$ 2.000,00' 
-                    lastTransaction='08/08/2024'
+                    amount={highlightData.expensives.amount} 
+                    lastTransaction={highlightData.expensives.lastTransaction}
                 />  
                 <HighlightCard
                     type='total'
                     title='Total' 
-                    amount='R$ 15.000,00' 
-                    lastTransaction='08/08/2024'
+                    amount={highlightData.total.amount} 
+                    lastTransaction={highlightData.total.lastTransaction}
                 />
                 
 
@@ -293,7 +330,10 @@ export default function Dashboard () {
                     
                 />
             </Transactions>
-            
+            </>
+          
+          }
+          
         </Container>
         
     )

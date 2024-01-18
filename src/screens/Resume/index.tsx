@@ -1,22 +1,36 @@
 import React, { useCallback, useState } from "react";
-import { ActivityIndicator } from "react-native";
-import { VictoryPie } from "victory-native";
-import { RFValue } from "react-native-responsive-fontsize";
-import { addMonths, subMonths, format } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { useFocusEffect } from "@react-navigation/native";
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
+//import { ActivityIndicator } from "react-native";
+//import { VictoryPie } from "victory-native";
+//import { RFValue } from "react-native-responsive-fontsize";
+//import { addMonths, subMonths, format } from "date-fns";
+//import { ptBR } from "date-fns/locale";
+//import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+//import { useFocusEffect } from "@react-navigation/native";
 
 import { useTheme } from "styled-components";
-import { useAuth } from "../../hooks/auth";
-import { useStorageData } from "../../hooks/storage";
+//import { useAuth } from "../../hooks/auth";
+//import { useStorageData } from "../../hooks/storage";
 
-import { HistoryCard } from "../../components/HistoryCard";
-import { TransactionCardProps } from "../../components/TransactionCard";
+//import { HistoryCard } from "../../components/HistoryCard";
+//import { TransactionCardProps } from "../../components/TransactionCard";
 
 import { categories } from "../../utils/categories";
 
-import * as S from "./styles";
+import {
+  Container,
+  Header,
+  Title,
+  LoadContainer,
+  Content,
+  ChartContainer,
+  MonthSelect,
+  MonthSelectButton,
+  MonthSelectIcon,
+  Month,
+
+} from "./styles";
 
 interface CategoryData {
   key: string;
@@ -27,8 +41,8 @@ interface CategoryData {
   percent: string;
 }
 
-export function Resume() {
-  const [isLoading, setIsLoading] = useState(false);
+export default function Resume() {
+  /* const [isLoading, setIsLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>(
     []
@@ -36,9 +50,9 @@ export function Resume() {
 
   const theme = useTheme();
   const { user } = useAuth();
-  const { getItem } = useStorageData();
+  const { getItem } = useStorageData(); */
 
-  function handleDateChange(action: "next" | "prev") {
+/*   function handleDateChange(action: "next" | "prev") {
     if (action === "next") {
       setSelectedDate(addMonths(selectedDate, 1));
     } else {
@@ -102,54 +116,51 @@ export function Resume() {
 
     setTotalByCategories(totaByCategory);
     setIsLoading(false);
-  }
+  } */
 
-  useFocusEffect(
+  /* useFocusEffect(
     useCallback(() => {
-      loadData();
+    //  loadData();
     }, [selectedDate])
-  );
+  ); */
 
   return (
-    <S.Container>
-      <S.Header>
-        <S.Title>Resumo por categoria</S.Title>
-      </S.Header>
+    <Container>
+      <GestureHandlerRootView>
+      <Header>
+        <Title>Resumo por categoria</Title>
+      </Header>
 
-      {isLoading ? (
-        <S.LoadContainer>
-          <ActivityIndicator size="large" color={theme.colors.primary} />
-        </S.LoadContainer>
-      ) : (
-        <S.Content
+      
+        <Content
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
             paddingHorizontal: 24,
-            paddingBottom: useBottomTabBarHeight(),
+            paddingBottom: 16,
           }}
         >
-          <S.ChartContainer>
-            <S.MonthSelect>
-              <S.MonthSelectButton>
-                <S.MonthSelectIcon
+          <ChartContainer>
+            <MonthSelect>
+              <MonthSelectButton>
+                <MonthSelectIcon
                   name="chevron-left"
-                  onPress={() => handleDateChange("prev")}
+                  //onPress={() => handleDateChange("prev")}
                 />
-              </S.MonthSelectButton>
+              </MonthSelectButton>
 
-              <S.Month>
-                {format(selectedDate, "MMMM, yyyy", { locale: ptBR })}
-              </S.Month>
+              <Month>
+{/*                 {format(selectedDate, "MMMM, yyyy", { locale: ptBR })}
+ */}              </Month>
 
-              <S.MonthSelectButton>
-                <S.MonthSelectIcon
+              <MonthSelectButton>
+                <MonthSelectIcon
                   name="chevron-right"
-                  onPress={() => handleDateChange("next")}
+                  //onPress={() => handleDateChange("next")}
                 />
-              </S.MonthSelectButton>
-            </S.MonthSelect>
+              </MonthSelectButton>
+            </MonthSelect>
 
-            <VictoryPie
+            {/* <VictoryPie
               data={totalByCategories}
               colorScale={totalByCategories.map((category) => category.color)}
               style={{
@@ -162,19 +173,19 @@ export function Resume() {
               labelRadius={70}
               x="percent"
               y="total"
-            />
-          </S.ChartContainer>
+            /> */}
+          </ChartContainer>
 
-          {totalByCategories.map((item) => (
+          {/* {totalByCategories.map((item) => (
             <HistoryCard
               key={item.key}
               title={item.name}
               amount={item.totalFormatted}
               color={item.color}
             />
-          ))}
-        </S.Content>
-      )}
-    </S.Container>
+          ))} */}
+        </Content>
+        </GestureHandlerRootView>
+    </Container>
   );
 }

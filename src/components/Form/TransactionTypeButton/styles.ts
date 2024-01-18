@@ -5,7 +5,7 @@ import { TouchableOpacity } from "react-native";
 import { RectButton } from "react-native-gesture-handler";
 
 interface IconProps {
-  type: 'up' | 'down'
+  type: 'up' | 'down' 
 }
 
 interface ContainerProps {
